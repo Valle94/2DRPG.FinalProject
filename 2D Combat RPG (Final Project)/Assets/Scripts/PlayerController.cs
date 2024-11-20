@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // This public property can be called in other classes which allows us to 
+    // set our private bool facingLeft from outside of this class.
+    public bool FacingLeft { get { return facingLeft; } set { facingLeft = value; } }
+
     [SerializeField] float moveSpeed = 1f;
 
     PlayerControls playerControls; //Player controls based on built-in Unity Input System
@@ -12,6 +16,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Animator myAnimator; //Handles animating the player sprite
     SpriteRenderer mySpriteRenderer;
+
+    bool facingLeft = false;
 
     // Initializing various components in Awake
     void Awake() 
@@ -82,10 +88,12 @@ public class PlayerController : MonoBehaviour
         if (mousePos.x < playerScreenPoint.x)
         {
             mySpriteRenderer.flipX = true;
+            FacingLeft = true;
         }
         else
         {
             mySpriteRenderer.flipX = false;
+            FacingLeft = false;
         }
     }
 }

@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 3963578137753279724}
   - component: {fileID: 5977477579990221601}
   - component: {fileID: 6645784185223419990}
+  - component: {fileID: 5735107912587886060}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -260,3 +261,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
+--- !u!114 &5735107912587886060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9185391901835723222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceca4e7726ccb8044a315229c673cb6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

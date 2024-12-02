@@ -1,12 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] int startingHealth = 3;
+    [SerializeField] GameObject deathVFXPrefab;
 
     int currentHealth;
+    Knockback knockback;
+    Flash flash;
+
+    void Awake() 
+    {
+        flash = GetComponent<Flash>();
+        knockback = GetComponent<Knockback>();
+    }
 
     void Start() 
     {
@@ -21,8 +31,14 @@ public class EnemyHealth : MonoBehaviour
     {
         // Subtract the damage from the current health
         currentHealth -= damage;
-        Debug.Log(currentHealth);
-        // Check to see if the enemy is 'dead'
+        knockback.GetKnockedBack(PlayerController.Instance.transform, 15f);
+        StartCoroutine(flash.FlashRoutine());
+        StartCoroutine(CheckDetectDeathRoutine());
+    }
+
+    private IEnumerator CheckDetectDeathRoutine()
+    {
+        yield return new WaitForSeconds(flash.GetRestoreMatTime());
         DetectDeath();
     }
 
@@ -32,6 +48,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
+            Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

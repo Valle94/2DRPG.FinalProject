@@ -7,11 +7,13 @@ public class EnemyPathfinding : MonoBehaviour
     [SerializeField] float moveSpeed = 4f;
     Vector2 moveDir; // Move Direction
     Rigidbody2D rb;
+    Knockback knockback;
 
     // Initialize components in awake
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        knockback = GetComponent<Knockback>();
     }
 
     void Start() 
@@ -22,6 +24,14 @@ public class EnemyPathfinding : MonoBehaviour
     
     void FixedUpdate()
     {
+        // If our enemy is 'getting knocked back' we will
+        // return out of fixed update until the knockback 
+        // is over, and then will go back to moving normally
+        if (knockback.gettingKnockedBack)
+        {
+            return;
+        }
+
         // Every update, move the enemy position based on current position,
         // movDir which is actually a target vector, and our moveSpeed.
         rb.MovePosition(rb.position + moveDir * (moveSpeed * Time.fixedDeltaTime));

@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     // set our private bool facingLeft from outside of this class.
     public bool FacingLeft { get { return facingLeft; } set { facingLeft = value; } }
 
+    public static PlayerController Instance;
+
     [SerializeField] float moveSpeed = 1f;
 
     PlayerControls playerControls; //Player controls based on built-in Unity Input System
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     // Initializing various components in Awake
     void Awake() 
     {
+        Instance = this;
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();

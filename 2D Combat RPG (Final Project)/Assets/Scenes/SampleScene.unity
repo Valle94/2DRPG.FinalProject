@@ -888,6 +888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b323fbfd0a4724db6c254266b3c36a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageAmount: 1
 --- !u!4 &638572403 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6359362670951020469, guid: 0374977198758df4785902ba4e341f6c, type: 3}
@@ -1374,7 +1375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599adcd87d19f0f4ca40de01e6af736f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  moveSpeed: 6
 --- !u!95 &1151989507
 Animator:
   serializedVersion: 5

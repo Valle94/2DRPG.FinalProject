@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+
+    [SerializeField] float roamChangeDirFloat = 2f;
+    
     // Create an enumerator which stores the 
     // possible states our enemy can be in.
     enum State 
@@ -39,7 +42,7 @@ public class EnemyAI : MonoBehaviour
         {
             Vector2 roamPosition = GetRoamingPosition();
             enemyPathfinding.MoveTo(roamPosition);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(roamChangeDirFloat);
         }
     }
 

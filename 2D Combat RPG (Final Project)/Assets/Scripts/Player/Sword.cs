@@ -9,11 +9,13 @@ public class Sword : MonoBehaviour
     [SerializeField] GameObject slashAnimPrefab;
     [SerializeField] Transform slashAnimSpawnPoint;
     [SerializeField] Transform weaponCollider;
+    [SerializeField] float swordAttackCD = .4f;
 
     PlayerControls playerControls;
     Animator myAnimator;
     PlayerController playerController;
     ActiveWeapon activeWeapon;
+    bool attackButtonDown, isAttacking = false;
 
     GameObject slashAnim;
 
@@ -36,31 +38,60 @@ public class Sword : MonoBehaviour
         // This line of code lets us quickly execute the Attack()
         // method without the need for a separate handler because 
         // the Attack() method doesn't require a parameter. 
-        playerControls.Combat.Attack.started += _ => Attack();
+
+        // When mouse is held down we start swinging
+        playerControls.Combat.Attack.started += _ => StartAttacking();
+        // When mouse button is lifted, we stop. 
+        playerControls.Combat.Attack.canceled += _ => StopAttacking();
     }
 
     void Update()
     {
         MouseFollowWilthOffset();
+        Attack();
+    }
+
+    void StartAttacking()
+    {
+        attackButtonDown = true;
+    }
+
+    void StopAttacking()
+    {
+        attackButtonDown = false;
     }
 
     // This method holds all the actions we want to execute when
     // the player attacks with the sword.
     void Attack()
     {
-        // This SetTrigger animates our sword swing
-        myAnimator.SetTrigger("Attack");
+        if (attackButtonDown && !isAttacking)
+        {
+            isAttacking = true;
+            // This SetTrigger animates our sword swing
+            myAnimator.SetTrigger("Attack");
 
-        // When we swing our sword, turn on the sword weapon collider
-        weaponCollider.gameObject.SetActive(true);
+            // When we swing our sword, turn on the sword weapon collider
+            weaponCollider.gameObject.SetActive(true);
 
-        // Here we are instantiating the sword swinging particle
-        // effects at a predefined spawn point
-        slashAnim = Instantiate(slashAnimPrefab, slashAnimSpawnPoint.position, Quaternion.identity);
-        // This sets the instantiated objects parent in the hierarchy;
-        // Because the sword's parent is ActiveWeapon, it will also 
-        // set the instantiated effects parent to be ActiveWeapon
-        slashAnim.transform.parent = this.transform.parent;
+            // Here we are instantiating the sword swinging particle
+            // effects at a predefined spawn point
+            slashAnim = Instantiate(slashAnimPrefab, slashAnimSpawnPoint.position, Quaternion.identity);
+            // This sets the instantiated objects parent in the hierarchy;
+            // Because the sword's parent is ActiveWeapon, it will also 
+            // set the instantiated effects parent to be ActiveWeapon
+            slashAnim.transform.parent = this.transform.parent;
+            // Start our attack cooldown coroutine
+            StartCoroutine(AttackCDRoutine());
+        }
+    }
+
+    // This coroutine simply handles how quickly we're able to 
+    // swing our sword if the mouse button is held down
+    IEnumerator AttackCDRoutine()
+    {
+        yield return new WaitForSeconds(swordAttackCD);
+        isAttacking = false;
     }
 
     // This method is called from our sword animator; it turns off

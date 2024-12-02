@@ -27,7 +27,7 @@ public class EnemyPathfinding : MonoBehaviour
         // If our enemy is 'getting knocked back' we will
         // return out of fixed update until the knockback 
         // is over, and then will go back to moving normally
-        if (knockback.gettingKnockedBack)
+        if (knockback.GettingKnockedBack)
         {
             return;
         }

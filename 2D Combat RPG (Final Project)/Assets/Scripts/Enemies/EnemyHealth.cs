@@ -7,6 +7,7 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] int startingHealth = 3;
     [SerializeField] GameObject deathVFXPrefab;
+    [SerializeField] float knockBackThrust = 15f;
 
     int currentHealth;
     Knockback knockback;
@@ -31,11 +32,16 @@ public class EnemyHealth : MonoBehaviour
     {
         // Subtract the damage from the current health
         currentHealth -= damage;
-        knockback.GetKnockedBack(PlayerController.Instance.transform, 15f);
+        // Knock back the enemy, 15f is a magic number for knockback amount for now
+        knockback.GetKnockedBack(PlayerController.Instance.transform, knockBackThrust);
+        // Show damage animation
         StartCoroutine(flash.FlashRoutine());
+        // Check if we killed the enemy
         StartCoroutine(CheckDetectDeathRoutine());
     }
 
+    // This coroutine makes it so that when getting the final hit on an enemy,
+    // the death check occurs after the visual effects, not instantly. 
     private IEnumerator CheckDetectDeathRoutine()
     {
         yield return new WaitForSeconds(flash.GetRestoreMatTime());

@@ -7,7 +7,7 @@ public class Knockback : MonoBehaviour
     // This way of declaring a variable lets us set it as public
     // which allows us to get it in other classes, but keep the 
     // ability to set change it to private
-    public bool gettingKnockedBack { get; private set;}
+    public bool GettingKnockedBack { get; private set;}
 
     [SerializeField] float knockBackTime = 0.2f;
 
@@ -22,7 +22,7 @@ public class Knockback : MonoBehaviour
     // struck by a damage source with a specific knockback amount.
     public void GetKnockedBack(Transform damageSource, float knockBackThrust)
     {
-        gettingKnockedBack = true;
+        GettingKnockedBack = true;
         Vector2 difference = (transform.position - damageSource.position).normalized * knockBackThrust * rb.mass;
         rb.AddForce(difference, ForceMode2D.Impulse);
         StartCoroutine(KnockRoutine());
@@ -36,6 +36,6 @@ public class Knockback : MonoBehaviour
     {
         yield return new WaitForSeconds(knockBackTime);
         rb.velocity = Vector2.zero;
-        gettingKnockedBack = false;
+        GettingKnockedBack = false;
     }
 }

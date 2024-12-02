@@ -16,11 +16,14 @@ public class Flash : MonoBehaviour
         defaultMat = spriteRenderer.material;
     }
 
+    // Getter method for using the restore material time other places
     public float GetRestoreMatTime()
     {
         return restoreDefaultMatTime;
     }
 
+    // Public coroutine for changing the sprite material from the default
+    // to the white 'damage flash' for some time, then changing it back
     public IEnumerator FlashRoutine()
     {
         spriteRenderer.material = whiteFlashMat;

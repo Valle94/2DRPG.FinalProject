@@ -7,19 +7,23 @@ public class PlayerController : MonoBehaviour
 {
     // This public property can be called in other classes which allows us to 
     // set our private bool facingLeft from outside of this class.
-    public bool FacingLeft { get { return facingLeft; } set { facingLeft = value; } }
+    public bool FacingLeft { get { return facingLeft; } }
 
     public static PlayerController Instance;
 
     [SerializeField] float moveSpeed = 1f;
+    [SerializeField] float dashSpeed = 4f;
+    [SerializeField] TrailRenderer myTrailRenderer;
 
     PlayerControls playerControls; //Player controls based on built-in Unity Input System
     Vector2 movement;
     Rigidbody2D rb;
     Animator myAnimator; //Handles animating the player sprite
     SpriteRenderer mySpriteRenderer;
+    float startingMoveSpeed;
 
     bool facingLeft = false;
+    bool isDashing = false;
 
     // Initializing various components in Awake
     void Awake() 
@@ -29,6 +33,13 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void Start() 
+    {
+        // Subscribing to the dash event when the dash button is pressed
+        playerControls.Combat.Dash.performed += _ => Dash();
+        startingMoveSpeed = moveSpeed;
     }
 
     // Enabling the player controls script used by the input system
@@ -91,12 +102,45 @@ public class PlayerController : MonoBehaviour
         if (mousePos.x < playerScreenPoint.x)
         {
             mySpriteRenderer.flipX = true;
-            FacingLeft = true;
+            facingLeft = true;
         }
         else
         {
             mySpriteRenderer.flipX = false;
-            FacingLeft = false;
+            facingLeft = false;
         }
+    }
+
+    // This method handles player 'dashing'
+    void Dash()
+    {
+        // If we aren't dashing
+        if (!isDashing)
+        {
+            // Set us to dashing
+            isDashing = true;
+            // Increase speed
+            moveSpeed *= dashSpeed;
+            // Render Particle Effects
+            myTrailRenderer.emitting = true;
+            // Run Dash ending corouting
+            StartCoroutine(EndDashRoutine());
+        }
+    }
+
+    // This corouting handles both how long the dash lasts
+    // as well as how often we can dash
+    IEnumerator EndDashRoutine()
+    {
+        float dashTime = 0.2f;
+        float dashCD = 0.25f;
+        // After a certain amount of time, return speed to normal
+        yield return new WaitForSeconds(dashTime);
+        moveSpeed = startingMoveSpeed;
+        // Turn off particle effects
+        myTrailRenderer.emitting = false;
+        // Set dashing cooldown
+        yield return new WaitForSeconds(dashCD);
+        isDashing = false;
     }
 }

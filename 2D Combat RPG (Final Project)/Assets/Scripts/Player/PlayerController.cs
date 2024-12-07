@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     // This public property can be called in other classes which allows us to 
     // set our private bool facingLeft from outside of this class.
     public bool FacingLeft { get { return facingLeft; } }
-
-    public static PlayerController Instance;
 
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] float dashSpeed = 4f;
@@ -26,9 +24,11 @@ public class PlayerController : MonoBehaviour
     bool isDashing = false;
 
     // Initializing various components in Awake
-    void Awake() 
+    protected override void Awake() 
     {
-        Instance = this;
+        // Call inheriting awake first
+        base.Awake();
+
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();

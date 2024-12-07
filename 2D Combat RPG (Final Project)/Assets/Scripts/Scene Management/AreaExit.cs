@@ -27,7 +27,7 @@ public class AreaExit : MonoBehaviour
 
     IEnumerator LoadSceneRoutine()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitToLoadTime);
         SceneManager.LoadScene(sceneToLoad);
     }
 }

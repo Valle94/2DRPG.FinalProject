@@ -4,86 +4,53 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 
-public class Sword : MonoBehaviour
+public class Sword : MonoBehaviour, IWeapon
 {
     [SerializeField] GameObject slashAnimPrefab;
-    [SerializeField] Transform slashAnimSpawnPoint;
-    [SerializeField] Transform weaponCollider;
     [SerializeField] float swordAttackCD = .4f;
-
-    PlayerControls playerControls;
+    
+    Transform weaponCollider;
+    Transform slashAnimSpawnPoint;
     Animator myAnimator;
-    PlayerController playerController;
-    ActiveWeapon activeWeapon;
-    bool attackButtonDown, isAttacking = false;
 
     GameObject slashAnim;
 
     // Initialize scripts and components in Awake
     void Awake()
     {
-        playerController = GetComponentInParent<PlayerController>();
-        playerControls = new PlayerControls(); 
         myAnimator = GetComponent<Animator>();
-        activeWeapon = GetComponentInParent<ActiveWeapon>();
-    }
-
-    void OnEnable()
-    {
-        playerControls.Enable(); // Enable player controls
     }
 
     void Start()
     {
-        // This line of code lets us quickly execute the Attack()
-        // method without the need for a separate handler because 
-        // the Attack() method doesn't require a parameter. 
-
-        // When mouse is held down we start swinging
-        playerControls.Combat.Attack.started += _ => StartAttacking();
-        // When mouse button is lifted, we stop. 
-        playerControls.Combat.Attack.canceled += _ => StopAttacking();
+        weaponCollider = PlayerController.Instance.GetWeaponCollider();
+        slashAnimSpawnPoint = PlayerController.Instance.GetSlashAnimSpawnPoint();
     }
 
     void Update()
     {
         MouseFollowWilthOffset();
-        Attack();
-    }
-
-    void StartAttacking()
-    {
-        attackButtonDown = true;
-    }
-
-    void StopAttacking()
-    {
-        attackButtonDown = false;
     }
 
     // This method holds all the actions we want to execute when
     // the player attacks with the sword.
-    void Attack()
+    public void Attack()
     {
-        if (attackButtonDown && !isAttacking)
-        {
-            isAttacking = true;
-            // This SetTrigger animates our sword swing
-            myAnimator.SetTrigger("Attack");
+        // This SetTrigger animates our sword swing
+        myAnimator.SetTrigger("Attack");
 
-            // When we swing our sword, turn on the sword weapon collider
-            weaponCollider.gameObject.SetActive(true);
+        // When we swing our sword, turn on the sword weapon collider
+        weaponCollider.gameObject.SetActive(true);
 
-            // Here we are instantiating the sword swinging particle
-            // effects at a predefined spawn point
-            slashAnim = Instantiate(slashAnimPrefab, slashAnimSpawnPoint.position, Quaternion.identity);
-            // This sets the instantiated objects parent in the hierarchy;
-            // Because the sword's parent is ActiveWeapon, it will also 
-            // set the instantiated effects parent to be ActiveWeapon
-            slashAnim.transform.parent = this.transform.parent;
-            // Start our attack cooldown coroutine
-            StartCoroutine(AttackCDRoutine());
-        }
+        // Here we are instantiating the sword swinging particle
+        // effects at a predefined spawn point
+        slashAnim = Instantiate(slashAnimPrefab, slashAnimSpawnPoint.position, Quaternion.identity);
+        // This sets the instantiated objects parent in the hierarchy;
+        // Because the sword's parent is ActiveWeapon, it will also 
+        // set the instantiated effects parent to be ActiveWeapon
+        slashAnim.transform.parent = this.transform.parent;
+        // Start our attack cooldown coroutine
+        StartCoroutine(AttackCDRoutine());
     }
 
     // This coroutine simply handles how quickly we're able to 
@@ -91,7 +58,7 @@ public class Sword : MonoBehaviour
     IEnumerator AttackCDRoutine()
     {
         yield return new WaitForSeconds(swordAttackCD);
-        isAttacking = false;
+        ActiveWeapon.Instance.ToggleIsAttacking(false);
     }
 
     // This method is called from our sword animator; it turns off
@@ -110,7 +77,7 @@ public class Sword : MonoBehaviour
 
         // If we are facing left as determined in the player controller, flip
         // this whole animation to the left side of the player.
-        if (playerController.FacingLeft)
+        if (PlayerController.Instance.FacingLeft)
         {
             slashAnim.GetComponent<SpriteRenderer>().flipX = true;
         }
@@ -124,7 +91,7 @@ public class Sword : MonoBehaviour
 
         // If we are facing left as determined in the player controller, flip
         // this whole animation to the left side of the player.
-        if (playerController.FacingLeft)
+        if (PlayerController.Instance.FacingLeft)
         {
             slashAnim.GetComponent<SpriteRenderer>().flipX = true;
         }
@@ -133,10 +100,10 @@ public class Sword : MonoBehaviour
     void MouseFollowWilthOffset()
     {
         // First store the mouse position as a variable
-        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Vector3 mousePos = Mouse.current.position.ReadValue();
         // Then store the player position as a variable by converting world
         // position to a position relative to the camera view (screen space).
-        Vector2 playerScreenPoint = Camera.main.WorldToScreenPoint(playerController.transform.position);
+        Vector3 playerScreenPoint = Camera.main.WorldToScreenPoint(PlayerController.Instance.transform.position);
 
         // We're generating an angle using Mathf functions; Atan2 gives a 
         // result in radians so we convert to degrees using Rad2Deg.
@@ -148,13 +115,13 @@ public class Sword : MonoBehaviour
         // is used to rotate the sword to follow the mouse.
         if (mousePos.x < playerScreenPoint.x)
         {
-            activeWeapon.transform.rotation = Quaternion.Euler(0, -180, angle);
+            ActiveWeapon.Instance.transform.rotation = Quaternion.Euler(0, -180, angle);
             // This line flips our weaponCollider too
             weaponCollider.transform.rotation = Quaternion.Euler(0, -180, 0);
         }
         else
         {
-            activeWeapon.transform.rotation = Quaternion.Euler(0, 0, angle);
+            ActiveWeapon.Instance.transform.rotation = Quaternion.Euler(0, 0, angle);
             weaponCollider.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }

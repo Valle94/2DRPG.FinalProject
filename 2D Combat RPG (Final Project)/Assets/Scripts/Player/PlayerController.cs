@@ -12,6 +12,8 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] float dashSpeed = 4f;
     [SerializeField] TrailRenderer myTrailRenderer;
+    [SerializeField] Transform slashAnimSpawnPoint;
+    [SerializeField] Transform weaponCollider;
 
     PlayerControls playerControls; //Player controls based on built-in Unity Input System
     Vector2 movement;
@@ -61,6 +63,16 @@ public class PlayerController : Singleton<PlayerController>
     {
         AdjustPlayerFacingDirection();
         Move();
+    }
+
+    public Transform GetWeaponCollider()
+    {
+        return weaponCollider;
+    }
+
+    public Transform GetSlashAnimSpawnPoint()
+    {
+        return slashAnimSpawnPoint;
     }
 
     // This method alters a variable 'movement' based on user inputs

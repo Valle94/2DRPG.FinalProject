@@ -7,7 +7,7 @@ using UnityEngine.Timeline;
 public class Sword : MonoBehaviour, IWeapon
 {
     [SerializeField] GameObject slashAnimPrefab;
-    [SerializeField] float swordAttackCD = .4f;
+    [SerializeField] WeaponInfo weaponInfo;
     
     Transform weaponCollider;
     Transform slashAnimSpawnPoint;
@@ -32,6 +32,11 @@ public class Sword : MonoBehaviour, IWeapon
         MouseFollowWilthOffset();
     }
 
+    public WeaponInfo GetWeaponInfo()
+    {
+        return weaponInfo;
+    }
+
     // This method holds all the actions we want to execute when
     // the player attacks with the sword.
     public void Attack()
@@ -49,16 +54,6 @@ public class Sword : MonoBehaviour, IWeapon
         // Because the sword's parent is ActiveWeapon, it will also 
         // set the instantiated effects parent to be ActiveWeapon
         slashAnim.transform.parent = this.transform.parent;
-        // Start our attack cooldown coroutine
-        StartCoroutine(AttackCDRoutine());
-    }
-
-    // This coroutine simply handles how quickly we're able to 
-    // swing our sword if the mouse button is held down
-    IEnumerator AttackCDRoutine()
-    {
-        yield return new WaitForSeconds(swordAttackCD);
-        ActiveWeapon.Instance.ToggleIsAttacking(false);
     }
 
     // This method is called from our sword animator; it turns off

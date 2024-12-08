@@ -8,12 +8,14 @@ public class EnemyPathfinding : MonoBehaviour
     Vector2 moveDir; // Move Direction
     Rigidbody2D rb;
     Knockback knockback;
+    SpriteRenderer spriteRenderer;
 
     // Initialize components in awake
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         knockback = GetComponent<Knockback>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start() 
@@ -35,6 +37,16 @@ public class EnemyPathfinding : MonoBehaviour
         // Every update, move the enemy position based on current position,
         // movDir which is actually a target vector, and our moveSpeed.
         rb.MovePosition(rb.position + moveDir * (moveSpeed * Time.fixedDeltaTime));
+
+        // Flipping our sprite depending on if the enemy is moving left or right
+        if (moveDir.x <0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 
     // This method accepts a vector2 as an argument and sets

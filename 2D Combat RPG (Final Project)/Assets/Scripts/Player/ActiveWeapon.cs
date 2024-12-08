@@ -7,6 +7,7 @@ public class ActiveWeapon : Singleton<ActiveWeapon>
     public MonoBehaviour CurrentActiveWeapon { get; private set; }
 
     PlayerControls playerControls;
+    float timeBetweenAttacks;
 
     bool attackButtonDown, isAttacking = false;
 
@@ -32,6 +33,8 @@ public class ActiveWeapon : Singleton<ActiveWeapon>
         playerControls.Combat.Attack.started += _ => StartAttacking();
         // When mouse button is lifted, we stop. 
         playerControls.Combat.Attack.canceled += _ => StopAttacking();
+
+        AttackCooldown();
     }
 
     void Update() 
@@ -43,16 +46,30 @@ public class ActiveWeapon : Singleton<ActiveWeapon>
     public void NewWeapon(MonoBehaviour newWeapon)
     {
         CurrentActiveWeapon = newWeapon;
+        AttackCooldown();
+        timeBetweenAttacks = (CurrentActiveWeapon as IWeapon).GetWeaponInfo().weaponCooldown;
+    }
+
+    // The following method and IEnumerator handle weapon cooldowns. 
+    // The cooldown is based on timeBetweenAttacks defined above, 
+    // which is different for each weapon. These technique allows
+    // for generic cooldown method that works for all weapons. 
+    void AttackCooldown()
+    {
+        isAttacking = true;
+        StopAllCoroutines();
+        StartCoroutine(TimeBetweenAttacksRoutine());
+    }
+
+    IEnumerator TimeBetweenAttacksRoutine()
+    {
+        yield return new WaitForSeconds(timeBetweenAttacks);
+        isAttacking = false;
     }
 
     // All of this attacking logic is the same as it was in our sword script. 
     // The difference is that now we're using an interface script 'IWeapon' to 
     // hand generalized attacking regardless of weapon. 
-    public void ToggleIsAttacking(bool value)
-    {
-        isAttacking = value;
-    }
-
     void StartAttacking()
     {
         attackButtonDown = true;
@@ -69,7 +86,7 @@ public class ActiveWeapon : Singleton<ActiveWeapon>
     {
         if (attackButtonDown && !isAttacking)
         {
-            isAttacking = true;
+            AttackCooldown();
             (CurrentActiveWeapon as IWeapon).Attack();
         }
         

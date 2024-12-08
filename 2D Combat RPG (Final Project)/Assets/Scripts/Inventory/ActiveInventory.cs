@@ -52,9 +52,13 @@ public class ActiveInventory : MonoBehaviour
         // Then we turn on only the highlight of the selected inventory slot.
         this.transform.GetChild(indexNum).GetChild(0).gameObject.SetActive(true);
 
+        // Calling our method to actually change weapons
         ChangeActiveWeapon();
     }
 
+    // While the previous methods handle changing the active slot index and 
+    // highlighting the active slot, this method changes the actual weapon 
+    // we have equipped in logic and instantiates it on our player. 
     void ChangeActiveWeapon()
     {
         // If we have a currently active weapon, destroy it
@@ -63,14 +67,19 @@ public class ActiveInventory : MonoBehaviour
             Destroy(ActiveWeapon.Instance.CurrentActiveWeapon.gameObject);
         }
 
-        // This huge line of getter methods is just searching down levels in our hierarchy
+        // This chain of getter methods is just searching down levels in our hierarchy
         // until we find the weapon prefab defined by the active slot index.
-        GameObject weaponToSpawn = transform.GetChild(activeSlotIndexNum).
-        GetComponentInChildren<InventorySlot>().GetWeaponInfo().weaponPrefab;
+        Transform childTransform = transform.GetChild(activeSlotIndexNum);
+        InventorySlot inventorySlot = childTransform.GetComponentInChildren<InventorySlot>();
+        WeaponInfo weaponInfo = inventorySlot.GetWeaponInfo();
+        GameObject weaponToSpawn = weaponInfo.weaponPrefab;
 
         // Instantiate the weapon we've chosen on our active weapon position
         GameObject newWeapon = Instantiate(weaponToSpawn, ActiveWeapon.Instance.transform.position, Quaternion.identity);
 
+        // Reset the rotation of the instantiated object
+        ActiveWeapon.Instance.transform.rotation = Quaternion.Euler(0, 0, 0);
+        
         // Set the instantiated object as a child of the active weapon instance in the hierarchy
         newWeapon.transform.parent = ActiveWeapon.Instance.transform;
 

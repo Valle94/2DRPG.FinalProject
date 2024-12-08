@@ -20,6 +20,7 @@ public class PlayerController : Singleton<PlayerController>
     Rigidbody2D rb;
     Animator myAnimator; //Handles animating the player sprite
     SpriteRenderer mySpriteRenderer;
+    Knockback knockback;
     float startingMoveSpeed;
 
     bool facingLeft = false;
@@ -35,6 +36,7 @@ public class PlayerController : Singleton<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+        knockback = GetComponent<Knockback>();
     }
 
     void Start() 
@@ -92,6 +94,12 @@ public class PlayerController : Singleton<PlayerController>
     // This method handles moving the rigidbody2d attached to the player
     void Move()
     {
+        // If we're getting knocked back, don't accept any movement
+        if (knockback.GettingKnockedBack)
+        {
+            return;
+        }
+
         // We move position based on our current position, 'movement' 
         // calculated in PlayerInput() which determines direction,
         // and our moveSpeed. We use fixedDeltaTime because this method

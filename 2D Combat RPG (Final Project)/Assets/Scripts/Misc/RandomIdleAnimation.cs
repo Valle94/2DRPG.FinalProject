@@ -13,6 +13,12 @@ public class RandomIdleAnimation : MonoBehaviour
 
     void Start()
     {
+        // Null reference check
+        if (!myAnimator)
+        {
+            return;
+        }
+
         // This animator state info is basically populating a variable with info
         // about a particular component, in this case and animator, which can 
         // then be referenced or altered. 

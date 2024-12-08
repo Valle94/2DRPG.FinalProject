@@ -33,7 +33,7 @@ public class Bow : MonoBehaviour, IWeapon
         // direction in game. You'll see something similar in Projectile.cs
         GameObject newArrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, 
                                         Quaternion.Euler(0f, 0f, -45f) * ActiveWeapon.Instance.transform.rotation);
-        newArrow.GetComponent<Projectile>().UpdateWeaponInfo(weaponInfo);
+        newArrow.GetComponent<Projectile>().UpdateProjectileRange(weaponInfo.weaponRange);
     }
 
     public WeaponInfo GetWeaponInfo()

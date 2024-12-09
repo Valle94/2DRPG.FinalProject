@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 3085520464361001078}
   - component: {fileID: 1468516409196518154}
   - component: {fileID: 7011390996577826441}
+  - component: {fileID: 7600708909246309998}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -206,7 +207,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!114 &3085520464361001078
 MonoBehaviour:
@@ -250,6 +251,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whiteFlashMat: {fileID: 2100000, guid: 2800cc2a6c629f145a6a738c03a75f75, type: 2}
   restoreDefaultMatTime: 0.2
+--- !u!114 &7600708909246309998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263360631638629920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5a03964e84b7f940b5655b1c0d4a822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fullStaminaImage: {fileID: 21300000, guid: d089463d1eb74a94bb82ce966f9eb892, type: 3}
+  EmptyStaminaImage: {fileID: 21300000, guid: 3e1859fe0c12fdc4fb6ae88100d8f482, type: 3}
+  timeBetweenStaminaRefesh: 3
 --- !u!1 &4154407888022573571
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActiveInventory : MonoBehaviour
+public class ActiveInventory : Singleton<ActiveInventory>
 {
     int activeSlotIndexNum = 0;
 
     PlayerControls playerControls;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         playerControls = new PlayerControls();
     }
 
@@ -21,6 +22,10 @@ public class ActiveInventory : MonoBehaviour
         // passing in a value 'ctx' when we call 'ToggleActiveSlot'
         playerControls.Inventory.Keyboard.performed += ctx => ToggleActiveSlot((int)ctx.ReadValue<float>());
 
+    }
+
+    public void EquipStartingWeapon()
+    {
         // Instantiate item slot 0 (Sword) as our default weapon on game start
         ToggleActiveHighlight(0);
     }
@@ -61,6 +66,11 @@ public class ActiveInventory : MonoBehaviour
     // we have equipped in logic and instantiates it on our player. 
     void ChangeActiveWeapon()
     {
+        if (PlayerHealth.Instance.IsDead)
+        {
+            return;
+        }
+        
         // If we have a currently active weapon, destroy it
         if (ActiveWeapon.Instance.CurrentActiveWeapon != null)
         {

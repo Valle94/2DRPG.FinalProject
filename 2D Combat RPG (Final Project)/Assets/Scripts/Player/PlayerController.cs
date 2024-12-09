@@ -44,12 +44,20 @@ public class PlayerController : Singleton<PlayerController>
         // Subscribing to the dash event when the dash button is pressed
         playerControls.Combat.Dash.performed += _ => Dash();
         startingMoveSpeed = moveSpeed;
+
+        // Equip the sword when we spawn/respawn
+        ActiveInventory.Instance.EquipStartingWeapon();
     }
 
     // Enabling the player controls script used by the input system
     private void OnEnable() 
     {
         playerControls.Enable();
+    }
+
+    void OnDisable() 
+    {
+        playerControls.Disable();
     }
 
     // Update occurs once per frame, but because that call is not 
@@ -94,8 +102,8 @@ public class PlayerController : Singleton<PlayerController>
     // This method handles moving the rigidbody2d attached to the player
     void Move()
     {
-        // If we're getting knocked back, don't accept any movement
-        if (knockback.GettingKnockedBack)
+        // If we're getting knocked back or dead, don't accept any movement
+        if (knockback.GettingKnockedBack || PlayerHealth.Instance.IsDead)
         {
             return;
         }
@@ -135,8 +143,10 @@ public class PlayerController : Singleton<PlayerController>
     void Dash()
     {
         // If we aren't dashing
-        if (!isDashing)
+        if (!isDashing && Stamina.Instance.CurrentStamina > 0)
         {
+            //Consume some dash stamina
+            Stamina.Instance.UseStamina();
             // Set us to dashing
             isDashing = true;
             // Increase speed

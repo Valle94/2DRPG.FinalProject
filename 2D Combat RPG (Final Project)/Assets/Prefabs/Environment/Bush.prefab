@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 716265738924329337}
   - component: {fileID: 6499955073246144991}
   - component: {fileID: 5583921960586267012}
+  - component: {fileID: 8303259278647634632}
   m_Layer: 0
   m_Name: Bush
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a3672fa175382be4188137c3fc686d6a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -134,3 +135,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyVFX: {fileID: 8055829492665459568, guid: d791f8d9c85a48e47a3d31ad3b2b3574, type: 3}
+--- !u!114 &8303259278647634632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6824669076616064311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddddbd94d0db6ba4bb5a44b1e03ab476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goldCoin: {fileID: 8414892001908577286, guid: 9fcda627ddf45084bbadf4cb83a2afbb, type: 3}
+  healthGlobe: {fileID: 8414892001908577286, guid: e3db72d27a36fbe4484897b56794d417, type: 3}
+  staminaGlobe: {fileID: 8414892001908577286, guid: 10ac4b2067357b64ab7c0b65b2a78e24, type: 3}

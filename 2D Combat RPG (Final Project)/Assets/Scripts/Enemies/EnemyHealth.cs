@@ -49,12 +49,13 @@ public class EnemyHealth : MonoBehaviour
     }
 
     // This method checks to see if the HP is <=0
-    // If so, it destroys the enemy.
+    // If so, it spawns some pickups and destroys the enemy.
     void DetectDeath()
     {
         if (currentHealth <= 0)
         {
             Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
+            GetComponent<PickUpSpawner>().DropItems();
             Destroy(gameObject);
         }
     }

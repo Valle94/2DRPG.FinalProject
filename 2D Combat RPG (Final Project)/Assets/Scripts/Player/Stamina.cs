@@ -41,7 +41,7 @@ public class Stamina : Singleton<Stamina>
     // When called, this method restores stamina
     public void RefreshStamina()
     {
-        if (CurrentStamina < maxStamina && PlayerHealth.Instance.IsDead)
+        if (CurrentStamina < maxStamina && !PlayerHealth.Instance.IsDead)
         {
             CurrentStamina++;
         }
